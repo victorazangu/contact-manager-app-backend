@@ -18,7 +18,7 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::all();
+        $contacts = Contact::with('groups', 'user')->get();
         if (!$contacts) {
             abort(404, 'No contacts found.');
         }
@@ -36,7 +36,7 @@ class ContactController extends Controller
             'contact' => 'required',
         ]);
         $user = Auth::user();
-        $contact = $user->contact()->create($validatedData);
+        $contact = $user->contacts()->create($validatedData);
 
         return response()->json([
             "message" => "Contact created successfully",

@@ -1,66 +1,179 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Contact Management system
+## _The backend using laravel and passport_
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+The system is design to manage your contacts in an organize manner
 
-## About Laravel
+## what is required to runthe backend
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- Database installed
+- PHP 7+
+- Composer
+- And of couse laptop or machine 
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## steps
+- clone the repo  
+```sh
+$ git clone https://github.com/victorazangu/contact-manager-app-backend.git
+```
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- move inside the cloned directory  
+```sh
+$ cd contact-manager-app-backend
+```
 
-## Learning Laravel
+- then 
+```sh
+$ cp .env.example .env
+```
+- configure .env and connect to db
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+- install dependacy
+```sh
+$ composer install
+```
+- generate key
+```sh
+$ php artisan key:generate
+```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- run migration 
+```sh
+$ php artisan migrate
+```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains over 2000 video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+- create encryption keys for passport 
+```sh
+$ php artisan passport:install
+```
 
-## Laravel Sponsors
+- run server
+```sh
+$ php artisan serve
+```
+# API Endpoints
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the Laravel [Patreon page](https://patreon.com/taylorotwell).
+## Authentication
 
-### Premium Partners
+### Register
+- **Endpoint:** `/api/v1/register`
+- **Method:** POST
+- **Description:** Register a new user.
+- **Request Body:** JSON object with user registration data.
+- **Eg** 
+```sh
+{
+	"name":"John Doe",
+	"email":"john@gmail.com",
+	"phone":"1234567890",
+	"password":"password",
+	"password_confirmation":"password"
+}
+```
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Cubet Techno Labs](https://cubettech.com)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[Many](https://www.many.co.uk)**
-- **[Webdock, Fast VPS Hosting](https://www.webdock.io/en)**
-- **[DevSquad](https://devsquad.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[OP.GG](https://op.gg)**
-- **[WebReinvent](https://webreinvent.com/?utm_source=laravel&utm_medium=github&utm_campaign=patreon-sponsors)**
-- **[Lendio](https://lendio.com)**
+### Login
+- **Endpoint:** `/api/v1/login`
+- **Method:** POST
+- **Description:** Authenticate and log in a user.
+- **Request Body:** JSON object with user login credentials.
+- **Eg** 
+```sh
+{
+	"email":"john@gmail.com",
+	"password":"password",
+}
+```
+### Logout
+- **Endpoint:** `/api/v1/logout`
+- **Method:** GET
+- **Description:** Log out the currently authenticated user.
 
-## Contributing
+## User Profile
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Get User Profile
+- **Endpoint:** `/api/v1/profile`
+- **Method:** GET
+- **Description:** Retrieve the user's profile information.
 
-## Code of Conduct
+### Update User Profile Picture
+- **Endpoint:** `/api/v1/profile/update-profile`
+- **Method:** PUT
+- **Description:** Update the user's profile picture.
+- **Request Body:** Multipart form data with the new profile picture.
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+## Contacts
 
-## Security Vulnerabilities
+### List Contacts
+- **Endpoint:** `/api/v1/contacts`
+- **Method:** GET
+- **Description:** Retrieve a list of user contacts.
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Create Contact
+- **Endpoint:** `/api/v1/contacts`
+- **Method:** POST
+- **Description:** Create a new contact.
+- **Request Body:** JSON object with contact information.
 
-## License
+### Show Contact
+- **Endpoint:** `/api/v1/contacts/{contact}`
+- **Method:** GET
+- **Description:** Retrieve details of a specific contact.
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Update Contact
+- **Endpoint:** `/api/v1/contacts/{contact}`
+- **Method:** PUT
+- **Description:** Update contact details.
+- **Request Body:** JSON object with updated contact information.
+
+### Delete Contact
+- **Endpoint:** `/api/v1/contacts/{contact}`
+- **Method:** DELETE
+- **Description:** Delete a contact.
+
+## Groups
+
+### List Groups
+- **Endpoint:** `/api/v1/groups`
+- **Method:** GET
+- **Description:** Retrieve a list of user groups.
+
+### Create Group
+- **Endpoint:** `/api/v1/groups`
+- **Method:** POST
+- **Description:** Create a new group.
+- **Request Body:** JSON object with group information.
+
+### Show Group
+- **Endpoint:** `/api/v1/groups/{group}`
+- **Method:** GET
+- **Description:** Retrieve details of a specific group.
+
+### Update Group
+- **Endpoint:** `/api/v1/groups/{group}`
+- **Method:** PUT
+- **Description:** Update group details.
+- **Request Body:** JSON object with updated group information.
+
+### Delete Group
+- **Endpoint:** `/api/v1/groups/{group}`
+- **Method:** DELETE
+- **Description:** Delete a group.
+
+### Add Contact to Group
+- **Endpoint:** `/api/v1/groups/{groupId}/add-contact/{contactId}`
+- **Method:** POST
+- **Description:** Add a contact to a group.
+
+### Remove Contact from Group
+- **Endpoint:** `/api/v1/groups/{groupId}/remove-contact/{contactId}`
+- **Method:** DELETE
+- **Description:** Remove a contact from a group.
+
+## Update User Profile Picture
+
+### Update User Profile Picture
+- **Endpoint:** `/api/v1/update-profile-picture`
+- **Method:** POST
+- **Description:** Update the user's profile picture.
+- **Request Body:** Multipart form data with the new profile picture.
+
+

@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\Auth\AuthController;
 use App\Http\Controllers\Api\ContactController;
+use App\Http\Controllers\Api\GroupController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -24,9 +25,14 @@ Route::group(['prefix' => 'v1'], function () {
         "middleware" => ["auth:api"]
     ], function () {
         Route::get("profile", [AuthController::class, "profile"]);
+        Route::put("profile/update-profile", [AuthController::class, "updateProfilePicture"]);
         Route::get("logout", [AuthController::class, "logout"]);
     });
     Route::resource('contacts', ContactController::class);
     Route::post('update-profile-picture', [AuthController::class, 'updateProfilePicture']);
 
+    Route::resource('groups', GroupController::class);
+
+    Route::post('/groups/{groupId}/add-contact/{contactId}',  [GroupController::class, "addContact"]);
+    Route::delete('/groups/{groupId}/remove-contact/{contactId}', [GroupController::class, "removeContact"]);
 });

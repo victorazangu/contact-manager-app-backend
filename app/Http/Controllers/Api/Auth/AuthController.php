@@ -63,29 +63,35 @@ class AuthController extends Controller
         ], 200);
     }
 
-    // public function updateProfilePicture(Request $request)
-    // {
+    public function updateProfilePicture(Request $request)
+    {
+        $request->validate([
+            'profile' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+        ]);
 
-    //     $request->validate([
-    //         'profile' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
-    //     ]);
+        $user = Auth::user();
 
-    //     $user = Auth::user();
+        if ($request->hasFile('profile')) {
+            if ($user->profile) {
+                Storage::disk('public')->delete($user->profile);
+            }
 
-    //     if ($user->profile) {
-    //         Storage::disk('public')->delete($user->profile);
-    //     }
+            $path = $request->file('profile')->store('profile', 'public');
 
-    //     $path = $request->file('profile')->store('profile', 'public');
+            $user->profile = $path;
+            $user->save();
 
-    //     $user->profile = $path;
-    //     $user->save();
+            return response()->json([
+                'message' => 'Profile picture updated successfully',
+                'data' => $path,
+            ], 200);
+        } else {
+            return response()->json([
+                'message' => 'No valid profile picture provided',
+            ], 400);
+        }
+    }
 
-    //     return response()->json([
-    //         'message' => 'Profile picture updated successfully',
-    //         'data' => $path,
-    //     ], 200);
-    // }
 
 
 

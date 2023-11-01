@@ -3,6 +3,7 @@
 namespace App\Models;
 
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
+use App\Models\Groups;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
@@ -46,8 +47,12 @@ class User extends Authenticatable
     ];
 
 
-    public function contact()
+    public function contacts()
     {
         return   $this->hasMany(Contact::class);
+    }
+    public function groups()
+    {
+        return   $this->hasMany(Groups::class);
     }
 }
