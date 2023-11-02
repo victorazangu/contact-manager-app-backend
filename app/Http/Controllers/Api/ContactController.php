@@ -34,8 +34,14 @@ class ContactController extends Controller
         $validatedData = $request->validate([
             'name' => 'required',
             'contact' => 'required',
+
         ]);
         $user = Auth::user();
+        if ($request->hasFile('image')) {
+            $image = $request->file('image');
+            $imagePath = $image->store('contacts', 'public');
+            $validatedData['image'] = $imagePath;
+        }
         $contact = $user->contacts()->create($validatedData);
 
         return response()->json([
