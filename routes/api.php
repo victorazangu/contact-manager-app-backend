@@ -25,6 +25,7 @@ Route::group(['prefix' => 'v1'], function () {
         "middleware" => ["auth:api"]
     ], function () {
         Route::get("profile", [AuthController::class, "profile"]);
+        Route::put("profile", [AuthController::class, "update"]);
         Route::put("profile/update-profile", [AuthController::class, "updateProfilePicture"]);
         Route::get("logout", [AuthController::class, "logout"]);
     });

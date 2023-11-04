@@ -100,6 +100,12 @@ $ php artisan serve
 - **Description:** Update the user's profile picture.
 - **Request Body:** Multipart form data with the new profile picture.
 
+### Update User Profile data
+- **Endpoint:** `/api/v1/profile`
+- **Method:** PUT
+- **Description:** Update the user's profile data.
+- **Request Body:** Multipart form data with the new data.
+
 ## Contacts
 
 ### List Contacts

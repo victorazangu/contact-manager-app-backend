@@ -91,7 +91,39 @@ class AuthController extends Controller
             ], 400);
         }
     }
+    public function update(Request $request)
+    {
+        $user = Auth::user();
 
+        $request->validate([
+            'name' => 'max:55',
+            'email' => 'email|unique:users,email,' . $user->id,
+            'phone' => 'max:255',
+        ]);
+
+        if ($request->has('name')) {
+            $user->name = $request->name;
+        }
+
+        if ($request->has('email')) {
+            $user->email = $request->email;
+        }
+
+        if ($request->has('phone')) {
+            $user->phone = $request->phone;
+        }
+
+        if ($request->has('password')) {
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
+        return response()->json([
+            'message' => 'Profile updated successfully',
+            'data' => $user  
+        ], 200);
+    }
 
 
 
