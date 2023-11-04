@@ -19,11 +19,20 @@ class GroupController extends Controller
      */
     public function index()
     {
-        $groups = Groups::with('contacts', 'user')->get();
-        if (!$groups) {
-            abort(404, 'No groups found.');
+
+        $user = Auth::user();
+
+        $groups = $user->groups()->with('contacts')->get();
+
+        if ($groups->isEmpty()) {
+            return response()->json(['message' => 'No groups found.'], 404);
         }
-        return response()->json($groups);
+
+        $contacts = $groups->flatMap(function ($group) {
+            return $group->contacts;
+        });
+
+        return response()->json($contacts);
     }
 
     /**

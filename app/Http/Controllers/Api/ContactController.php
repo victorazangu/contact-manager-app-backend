@@ -18,30 +18,35 @@ class ContactController extends Controller
      */
     public function index()
     {
-        $contacts = Contact::with('groups', 'user')->get();
-        if (!$contacts) {
-            abort(404, 'No contacts found.');
-        }
+        $user = Auth::user();
+        $contacts = $user->contacts()->with('groups')->get();
 
-        return response()->json($contacts);
+        if (!$contacts->isEmpty()) {
+            return response()->json($contacts);
+        } else {
+            return response()->json([], 200);
+        }
     }
+
 
     /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
+        $user = Auth::user();
+
         $validatedData = $request->validate([
             'name' => 'required',
             'contact' => 'required',
-
         ]);
-        $user = Auth::user();
+
         if ($request->hasFile('image')) {
             $image = $request->file('image');
             $imagePath = $image->store('contacts', 'public');
             $validatedData['image'] = $imagePath;
         }
+
         $contact = $user->contacts()->create($validatedData);
 
         return response()->json([
@@ -61,6 +66,9 @@ class ContactController extends Controller
             return response()->json([
                 "message" => "The contact with the ID of " . $id . " could not be found."
             ], 404);
+        }
+        if (Auth::user()->id !== $contact->user_id) {
+            return response()->json(['error' => 'Unauthorized'], 401);
         }
 
         return response()->json($contact);
@@ -100,7 +108,6 @@ class ContactController extends Controller
      */
     public function destroy($id)
     {
-
         $contact = Contact::find($id);
 
         if (!$contact) {
@@ -108,6 +115,10 @@ class ContactController extends Controller
                 "message" => "The contact with the ID of " . $id . " could not be found."
             ], 404);
         }
+        if (Auth::user()->id !== $contact->user_id) {
+            return response()->json(['error' => 'Unauthorized'], 401);
+        }
+
         $contact->delete();
         return response()->json(null, 204);
     }
